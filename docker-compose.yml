@@ -1,0 +1,60 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: secondsense
+      POSTGRES_PASSWORD: secondsense
+      POSTGRES_DB: secondsense
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U secondsense"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql://secondsense:secondsense@postgres:5432/secondsense
+      REDIS_URL: redis://redis:6379/0
+      JWT_SECRET: dev-secret-change-me
+      CORS_ORIGINS: http://localhost:5500,http://localhost:3000
+      RISK_ALERT_THRESHOLD: "70"
+      # Leave Twilio/SendGrid/etc blank to run in mocked alert mode locally
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    command: >
+      sh -c "python scripts/init_db.py && uvicorn app.main:app --host 0.0.0.0 --port 8000"
+
+  frontend:
+    image: python:3.12-slim
+    working_dir: /site
+    volumes:
+      - ./frontend:/site
+    ports:
+      - "5500:5500"
+    command: python -m http.server 5500
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:

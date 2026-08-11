@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Second Sense — behavioral rhythm monitor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="scanlines" aria-hidden="true"></div>
+
+  <div class="wrap">
+    <header class="hud-header">
+      <div class="hud-tag">continuous behavioral monitor</div>
+      <h1>second<span class="sense-accent">sense</span><span class="cursor-blink">_</span></h1>
+      <p class="tagline">Everyone types and moves a mouse a little differently — it's a rhythm, like a heartbeat. Second Sense learns yours, then watches quietly for the moment it stops sounding like you.</p>
+    </header>
+
+    <section class="panel" id="auth-panel">
+      <div class="panel-corner tl"></div><div class="panel-corner tr"></div>
+      <div class="panel-corner bl"></div><div class="panel-corner br"></div>
+      <h2><span class="step-index">01</span> identify yourself</h2>
+      <div class="row">
+        <input type="email" id="email" placeholder="email" value="demo@secondsense.dev">
+        <input type="password" id="password" placeholder="password, min 8 characters" value="supersecret123">
+      </div>
+      <div class="row">
+        <button id="signup-btn" class="btn-outline">create account</button>
+        <button id="login-btn" class="btn-outline">log in</button>
+      </div>
+      <p class="status" id="auth-status"><span class="dot dot-off"></span>not connected</p>
+    </section>
+
+    <section class="panel" id="type-panel">
+      <div class="panel-corner tl"></div><div class="panel-corner tr"></div>
+      <div class="panel-corner bl"></div><div class="panel-corner br"></div>
+      <h2><span class="step-index">02</span> type naturally</h2>
+      <textarea id="typing-area" rows="5" placeholder="Type here the way you normally would. Every few seconds Second Sense reads your rhythm and compares it to your baseline. It'll read low risk for the first minute — it needs a few samples to learn you. Then try typing much slower, or paste a block of text, and watch the reading move."></textarea>
+
+      <div class="readout-row">
+        <div class="dial-wrap">
+          <svg class="dial" viewBox="0 0 200 120" aria-hidden="true">
+            <path class="dial-track" d="M20 100 A80 80 0 0 1 180 100" />
+            <path class="dial-fill" id="dial-fill" d="M20 100 A80 80 0 0 1 180 100" />
+          </svg>
+          <div class="dial-readout">
+            <span class="dial-value" id="risk-value">00</span>
+            <span class="dial-unit">risk</span>
+          </div>
+        </div>
+
+        <div class="readout-meta">
+          <div class="meta-row">
+            <span class="meta-label">baseline samples</span>
+            <span class="meta-value" id="sample-count">0</span>
+          </div>
+          <div class="meta-row">
+            <span class="meta-label">reading</span>
+            <span class="meta-value" id="anomaly-status">awaiting data</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="waveform-wrap">
+        <canvas id="waveform" height="64"></canvas>
+      </div>
+    </section>
+
+    <section class="panel" id="log-panel">
+      <div class="panel-corner tl"></div><div class="panel-corner tr"></div>
+      <div class="panel-corner bl"></div><div class="panel-corner br"></div>
+      <h2><span class="step-index">03</span> session log</h2>
+      <table id="log-table">
+        <thead><tr><th>time</th><th>risk</th><th>flagged</th></tr></thead>
+        <tbody id="log-body">
+          <tr class="empty-row"><td colspan="3">no readings yet — start typing above</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
