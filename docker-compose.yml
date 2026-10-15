@@ -6,7 +6,7 @@ services:
       POSTGRES_PASSWORD: secondsense
       POSTGRES_DB: secondsense
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
@@ -29,7 +29,7 @@ services:
     build:
       context: ./backend
     ports:
-      - "8000:8000"
+      - "8001:8000"
     environment:
       DATABASE_URL: postgresql://secondsense:secondsense@postgres:5432/secondsense
       REDIS_URL: redis://redis:6379/0
