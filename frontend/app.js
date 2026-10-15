@@ -3,7 +3,7 @@
 // backend's /sessions/ingest endpoint for scoring, and renders the
 // result on the arc dial + live waveform.
 
-const API_BASE = window.SECONDSENSE_API_BASE || "http://localhost:8001";
+const API_BASE = window.SECONDSENSE_API_BASE || "https://second-sense.onrender.com";
 const BATCH_INTERVAL_MS = 4000;
 const DIAL_ARC_LENGTH = 251; // matches the SVG path's stroke-dasharray
 
